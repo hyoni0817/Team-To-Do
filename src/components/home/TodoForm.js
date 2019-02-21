@@ -13,6 +13,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Checkbox from '@material-ui/core/Checkbox';
+import Switch from '@material-ui/core/Switch';
 
 
 const styles = theme => ({
@@ -24,17 +25,23 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
+  titleTextField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width:'95%'
+  },
   formControl: {
-    margin: theme.spacing.unit * 3,
+    marginLeft: theme.spacing.unit,
+    marginTop: '10px',
+  },
+  formControl2: {
+    marginLeft: theme.spacing.unit,
   },
 });
 
 class TodoForm extends Component {
     state = {
         open: false,
-        gilad: true,
-        jason: false,
-        antoine: false,
       };
     
       handleClickOpen = () => {
@@ -63,80 +70,94 @@ class TodoForm extends Component {
               onClose={this.handleClose}
               aria-labelledby="form-dialog-title"
             >
-              <DialogTitle id="form-dialog-title">할일 추가</DialogTitle>
-              <DialogContent>
-                <div>
-                  <TextField
-                    id="standard-uncontrolled"
-                    label="할일 제목"
-                    className={classes.textField}
-                    margin="normal"
-                  />
+            <DialogTitle id="form-dialog-title">할일 추가</DialogTitle>
+            <DialogContent>
+              <div>
+                <TextField
+                  id="standard-uncontrolled"
+                  label="할일 제목"
+                  className={classes.titleTextField}
+                  margin="normal"
+                />
+              </div>
+              <div>
+                <FormGroup row>
+                  <form className={classes.container} noValidate>
+                    <TextField
+                      id="date"
+                      label="시작"
+                      type="date"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </form>
+                  <form className={classes.container} noValidate>
+                    <TextField
+                      id="date"
+                      label="종료"
+                      type="date"
+                      className={classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </form>
+                </FormGroup>
+              </div>
+              <div>
+                <TextField
+                  id="outlined-multiline-static"
+                  label="할일 내용"
+                  multiline
+                  rows="4"
+                  className={classes.textField2}
+                  fullWidth
+                  margin="normal"
+                  variant="outlined"
+                />
+              </div>       
+              <div>  
+                <FormControl component="fieldset" className={classes.formControl}>
+                  <FormLabel component="legend">참여자</FormLabel>
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <Checkbox onChange={this.handleChange('gilad')} value="gilad" />
+                        }
+                        label="한지민"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox onChange={this.handleChange('jason')} value="jason" />
+                        }
+                        label="전지현"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox onChange={this.handleChange('antoine')}value="antoine" />
+                        }
+                        label="이나영"
+                      />
+                    </FormGroup>
+                  </FormControl>
                 </div>
                 <div>
-                  <FormGroup row>
-                    <form className={classes.container} noValidate>
-                      <TextField
-                        id="date"
-                        label="시작"
-                        type="date"
-                        className={classes.textField}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
+                  <FormControl component="fieldset" className={classes.formControl2}>
+                    <FormLabel component="legend">긴급 할일 여부</FormLabel>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            value="jason"
+                          />
+                        }
+                        label="긴급"
                       />
-                    </form>
-                    <form className={classes.container} noValidate>
-                      <TextField
-                        id="date"
-                        label="종료"
-                        type="date"
-                        className={classes.textField}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                    </form>
-                  </FormGroup>
+                    </FormGroup>
+                  </FormControl>
                 </div>
-                <div>
-                  <TextField
-                    id="outlined-multiline-static"
-                    label="할일 내용"
-                    multiline
-                    rows="4"
-                    className={classes.textField}
-                    margin="normal"
-                    variant="outlined"
-                  />
-                </div>         
-              <FormControl component="fieldset" className={classes.formControl}>
-                <FormLabel component="legend">참여자</FormLabel>
-                  <FormGroup row>
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={gilad} onChange={this.handleChange('gilad')} value="gilad" />
-                      }
-                      label="한지민"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={jason} onChange={this.handleChange('jason')} value="jason" />
-                      }
-                      label="전지현"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={antoine}
-                          onChange={this.handleChange('antoine')}
-                          value="antoine"
-                        />
-                      }
-                      label="이나영"
-                    />
-                  </FormGroup>
-                </FormControl>
               </DialogContent>
               <DialogActions>
                 <Button onClick={this.handleClose} color="primary">
