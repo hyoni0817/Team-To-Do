@@ -8,7 +8,6 @@ class TodoList extends Component {
 
     render() {
         const {data, onUpdate} = this.props;
-        console.log(data[0].id)
         const list = data.map(
             info => (
                 <TodoInfo
