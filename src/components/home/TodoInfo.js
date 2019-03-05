@@ -6,9 +6,10 @@ import { SyncHook } from 'tapable';
 class TodoInfo extends Component {
 
     state = {
-        complete: false,
-        title: '',
-        participant:''
+        TITLE: '',
+        PARTICIPANT: '',
+        END_DT: '',
+        EMERGENCY_FL: ''
     }
     
     shouldComponentUpdate(nextProps, nextState) {
@@ -19,7 +20,7 @@ class TodoInfo extends Component {
     }
 
     render() {
-        const {title, participant} = this.props.info;
+        const {TITLE, PARTICIPANT, END_DT} = this.props.info;
         const style = {
             border:'1px solid black',
             padding:'8px',
@@ -29,8 +30,9 @@ class TodoInfo extends Component {
         return (
             <div style={style}>
                 <Fragment>
-                    <div>{title}</div>
-                    <div>참가자: {participant}</div>
+                    <div>{TITLE}</div>
+                    <div>참가자: {PARTICIPANT}</div>
+                    <div>완료일: {END_DT}</div>
                 </Fragment>
                 
             </div>
