@@ -85,18 +85,7 @@ class TodoForm extends Component {
                   <form className={classes.container} noValidate>
                     <TextField
                       id="date"
-                      label="시작"
-                      type="date"
-                      className={classes.textField}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  </form>
-                  <form className={classes.container} noValidate>
-                    <TextField
-                      id="date"
-                      label="종료"
+                      label="완료일"
                       type="date"
                       className={classes.textField}
                       InputLabelProps={{
