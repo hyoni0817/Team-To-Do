@@ -25,7 +25,7 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
-  titleTextField: {
+  titleAndDateField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width:'95%'
@@ -70,30 +70,30 @@ class TodoForm extends Component {
               onClose={this.handleClose}
               aria-labelledby="form-dialog-title"
             >
+            <form className={classes.container} noValidate>
             <DialogTitle id="form-dialog-title">할일 추가</DialogTitle>
             <DialogContent>
               <div>
                 <TextField
                   id="standard-uncontrolled"
                   label="할일 제목"
-                  className={classes.titleTextField}
+                  className={classes.titleAndDateField}
                   margin="normal"
                 />
               </div>
               <div>
-                <FormGroup row>
-                  <form className={classes.container} noValidate>
+                  
                     <TextField
                       id="date"
                       label="완료일"
                       type="date"
-                      className={classes.textField}
+                      className={classes.titleAndDateField}
                       InputLabelProps={{
                         shrink: true,
                       }}
                     />
-                  </form>
-                </FormGroup>
+                  
+
               </div>
               <div>
                 <TextField
@@ -156,6 +156,7 @@ class TodoForm extends Component {
                   추가하기
                 </Button>
               </DialogActions>
+              </form>
             </Dialog>
           </div>
         );
