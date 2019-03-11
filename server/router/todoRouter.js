@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.route('/todolist')
     .get(showTodoList)
+    .post(addNewTodo)
 
 function showTodoList(req, res){
     Todo.getTodoList((err,result) => {
@@ -13,6 +14,10 @@ function showTodoList(req, res){
         }
         res.send(result);
     })
+}
+
+function addNewTodo(req, res){
+    console.log(req.body);
 }
 
 
