@@ -42,6 +42,12 @@ const styles = theme => ({
 class TodoForm extends Component {
     state = {
         open: false,
+        title: '',
+        deadline: '',
+        contents: '',
+        participant: new Map(),
+        emergency: 0,
+
       };
     
       handleClickOpen = () => {
@@ -53,13 +59,50 @@ class TodoForm extends Component {
       };
     
       handleChange = name => event => {
-        this.setState({ [name]: event.target.checked });
+        const isChecked = event.target.checked;
+        const ptcMap = this.state.participant;
+        this.setState(
+          { [name]: event.target.checked, participant:ptcMap.set(name,isChecked)}
+        );
       };
+
+
+      handleSubmit = (e) => {
+        e.preventDefault(); //페이지 리로딩 방지
+        let checkedName = [];
+        
+        function inputName(value, key, map) {
+          if(value == true) checkedName.push(key);
+          return checkedName; 
+        }
+
+        this.state.participant.forEach(inputName)
+
+        const info = {
+          method: 'post', 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            title: this.state.title,
+            deadline: this.state.deadline,
+            contents: this.state.contents,
+            participant: inputName(),
+            emergency: parseInt(this.state.emergency),
+    
+          })
+        }
+        fetch('/todolist', info)
+        .then(function(response) {
+          return response.json();
+        })
+
+        this.setState({emergency: 0})
+    }
 
       render() {
         const { classes } = this.props;
-        const { gilad, jason, antoine } = this.state;
-
+        const { 한지민, 전지현, 이나영 } = this.state;
         return (
           <div>
             <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
@@ -70,92 +113,93 @@ class TodoForm extends Component {
               onClose={this.handleClose}
               aria-labelledby="form-dialog-title"
             >
-            <form className={classes.container} noValidate>
-            <DialogTitle id="form-dialog-title">할일 추가</DialogTitle>
-            <DialogContent>
-              <div>
-                <TextField
-                  id="standard-uncontrolled"
-                  label="할일 제목"
-                  className={classes.titleAndDateField}
-                  margin="normal"
-                />
-              </div>
-              <div>
-                  
-                    <TextField
-                      id="date"
-                      label="완료일"
-                      type="date"
-                      className={classes.titleAndDateField}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                    />
-                  
-
-              </div>
-              <div>
-                <TextField
-                  id="outlined-multiline-static"
-                  label="할일 내용"
-                  multiline
-                  rows="4"
-                  className={classes.textField2}
-                  fullWidth
-                  margin="normal"
-                  variant="outlined"
-                />
-              </div>       
-              <div>  
-                <FormControl component="fieldset" className={classes.formControl}>
-                  <FormLabel component="legend">참여자</FormLabel>
-                    <FormGroup row>
-                      <FormControlLabel
-                        control={
-                          <Checkbox onChange={this.handleChange('gilad')} value="gilad" />
-                        }
-                        label="한지민"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox onChange={this.handleChange('jason')} value="jason" />
-                        }
-                        label="전지현"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox onChange={this.handleChange('antoine')}value="antoine" />
-                        }
-                        label="이나영"
-                      />
-                    </FormGroup>
-                  </FormControl>
+            <form className={classes.container} onSubmit={this.handleSubmit}>
+              <DialogTitle id="form-dialog-title">할일 추가</DialogTitle>
+              <DialogContent>
+                <div>
+                  <TextField
+                    id="standard-uncontrolled"
+                    label="할일 제목"
+                    onChange={e => this.setState({ title: e.target.value })}
+                    className={classes.titleAndDateField}
+                    margin="normal"
+                  />
                 </div>
                 <div>
-                  <FormControl component="fieldset" className={classes.formControl2}>
-                    <FormLabel component="legend">긴급 할일 여부</FormLabel>
-                    <FormGroup>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            value="jason"
-                          />
-                        }
-                        label="긴급"
-                      />
-                    </FormGroup>
-                  </FormControl>
+                  <TextField
+                    id="date"
+                    label="완료일"
+                    type="date"
+                    onChange={e => this.setState({ deadline: e.target.value })}
+                    className={classes.titleAndDateField}
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
                 </div>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={this.handleClose} color="primary">
-                  취소
-                </Button>
-                <Button onClick={this.handleClose} color="primary">
-                  추가하기
-                </Button>
-              </DialogActions>
+                <div>
+                  <TextField
+                    id="outlined-multiline-static"
+                    label="할일 내용"
+                    multiline
+                    rows="4"
+                    onChange={e => this.setState({ contents: e.target.value })}
+                    className={classes.textField}
+                    fullWidth
+                    margin="normal"
+                    variant="outlined"
+                  />
+                </div>       
+                <div>  
+                  <FormControl component="fieldset" className={classes.formControl}>
+                    <FormLabel component="legend">참여자</FormLabel>
+                      <FormGroup row>
+                        <FormControlLabel
+                          control={
+                            <Checkbox onChange={this.handleChange('한지민')} value="한지민" />
+                          }
+                          label="한지민"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox onChange={this.handleChange('전지현')} value="전지현" />
+                          }
+                          label="전지현"
+                        />
+                        <FormControlLabel
+                          control={
+                            <Checkbox onChange={this.handleChange('이나영')} value="이나영" />
+                          }
+                          label="이나영"
+                        />
+                      </FormGroup>
+                    </FormControl>
+                  </div>
+                  <div>
+                    <FormControl component="fieldset" className={classes.formControl2}>
+                      <FormLabel component="legend">긴급 할일 여부</FormLabel>
+                      <FormGroup>
+                        <FormControlLabel
+                          control={
+                            <Switch
+                            value = "1"
+                            />
+                          }
+                          onChange={e => this.setState({ emergency: e.target.value })}
+                          label="긴급"
+                        />
+                      </FormGroup>
+                    </FormControl>
+                  </div>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.handleClose} color="primary">
+                    취소
+                  </Button>
+                  <Button type="submit" onClick={this.handleClose} color="primary">
+                    추가하기
+                  </Button>
+                </DialogActions>
               </form>
             </Dialog>
           </div>
