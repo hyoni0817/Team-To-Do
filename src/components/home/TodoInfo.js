@@ -1,7 +1,20 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import { SyncHook } from 'tapable';
 
-
+const styles = theme => ({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing.unit * 2,
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+  });
 
 class TodoInfo extends Component {
 
@@ -21,23 +34,26 @@ class TodoInfo extends Component {
 
     render() {
         const {TITLE, PARTICIPANT, END_DT} = this.props.info;
-        const style = {
-            border:'1px solid black',
-            padding:'8px',
-            margin:'8px'
-        }
+        const { classes } = this.props;
         
         return (
-            <div style={style}>
-                <Fragment>
-                    <div>{TITLE}</div>
-                    <div>참가자: {PARTICIPANT}</div>
-                    <div>완료일: {END_DT}</div>
-                </Fragment>
-                
+            <div className={classes.root}>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                    <Paper className={classes.paper}>
+                        <div>{TITLE}</div>
+                        <div>참가자: {PARTICIPANT}</div>
+                        <div>완료일: {END_DT}</div>
+                    </Paper>
+                    </Grid>
+                </Grid>
             </div>
         )
     }
 }
 
-export default TodoInfo;
+TodoInfo.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(TodoInfo);
