@@ -1,10 +1,16 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 import TodoList from './TodoList.js';
-
 
 let d = new Date();
 let todayDt = d.getFullYear()+'.'+(d.getMonth()+1)+'.'+d.getDate();
 
+const styles = theme => ({
+    dateAndList: {
+        padding: '20px'
+    }
+})
 class Home extends Component {
     state = {
         date: todayDt,
@@ -18,14 +24,15 @@ class Home extends Component {
       }
     
     
-    render() {
 
+    render() {
+        const {classes} = this.props;
         return (
             <Fragment>
-                <div>
+                <div class={classes.dateAndList}>
                  <p>{this.state.date}</p>
                 </div>
-                <div>
+                <div class={classes.dateAndList}>
                  <TodoList
                   data={this.state.todo}></TodoList>
                 </div>
@@ -35,4 +42,8 @@ class Home extends Component {
     }
 }
 
-export default Home;
+Home.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+
+export default withStyles(styles)(Home);
