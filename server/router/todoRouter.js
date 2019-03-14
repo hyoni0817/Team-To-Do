@@ -17,7 +17,26 @@ function showTodoList(req, res){
 }
 
 function addNewTodo(req, res){
-    console.log(req.body);
+    var date = new Date();
+
+    const title =  req.body.TITLE;
+    const deadline =  req.body.END_DT;
+    const contents =  req.body.CONTENT;
+    const participant =  req.body.PARTICIPANT;
+    const emergency =  req.body.EMERGENCY_FL;
+    const saveDt = date.getFullYear()+"-"+date.getMonth()+"-"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+
+
+    Todo.saveTodo(title, deadline, contents, participant, emergency,  saveDt, (err, result) => {
+        if(err) {
+            res.status(500).send({msg: 'saveTodo error'});
+            return;
+        }
+
+        if(err) return next(err);
+
+        return res.send(result);
+    })
 }
 
 
