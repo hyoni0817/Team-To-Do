@@ -42,41 +42,48 @@ const styles = theme => ({
 class TodoForm extends Component {
     state = {
         open: false,
-        title: '',
-        deadline: '',
-        contents: '',
-        participant: new Map(),
-        emergency: 0,
+        WRITE_NO:'',
+        TITLE: '',
+        END_DT: '',
+        CONTENT: '',
+        PARTICIPANT: new Map(),
+        EMERGENCY_FL: 0,
 
       };
     
       handleClickOpen = () => {
-        this.setState({ open: true });
+        this.setState({ open: true, EMERGENCY_FL: 0, PARTICIPANT: new Map()});
       };
     
       handleClose = () => {
-        this.setState({ open: false });
+        this.setState({ open: false});
       };
     
-      handleChange = name => event => {
-        const isChecked = event.target.checked;
-        const ptcMap = this.state.participant;
-        this.setState(
-          { [name]: event.target.checked, participant:ptcMap.set(name,isChecked)}
-        );
+      handleChange = event => {
+        const name = event.target.value;
+        const isChecked = event.target.checked; 
+        const ptcMap = this.state.PARTICIPANT;
+
+        if(event.target.checked == true){
+          this.setState(
+            { [name]: event.target.checked, PARTICIPANT:ptcMap.set(name,isChecked)}
+          );
+        }
+        
       };
 
 
       handleSubmit = (e) => {
         e.preventDefault(); //페이지 리로딩 방지
-        let checkedName = [];
+        
+        var checkedName = [];
         
         function inputName(value, key, map) {
           if(value == true) checkedName.push(key);
-          return checkedName; 
+          return checkedName.toString(); 
         }
 
-        this.state.participant.forEach(inputName)
+        this.state.PARTICIPANT.forEach(inputName)
 
         const info = {
           method: 'post', 
@@ -84,25 +91,26 @@ class TodoForm extends Component {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ 
-            title: this.state.title,
-            deadline: this.state.deadline,
-            contents: this.state.contents,
-            participant: inputName(),
-            emergency: parseInt(this.state.emergency),
+            TITLE: this.state.TITLE,
+            END_DT: this.state.END_DT,
+            CONTENT: this.state.CONTENT,
+            PARTICIPANT: inputName(),
+            EMERGENCY_FL: parseInt(this.state.EMERGENCY_FL),
     
           })
         }
+
         fetch('/todolist', info)
         .then(function(response) {
           return response.json();
         })
 
-        this.setState({emergency: 0})
+        this.props.onCreate(this.state);
     }
 
       render() {
         const { classes } = this.props;
-        const { 한지민, 전지현, 이나영 } = this.state;
+       const { 한지민, 전지현, 이나영 } = this.state;
         return (
           <div>
             <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
@@ -120,7 +128,7 @@ class TodoForm extends Component {
                   <TextField
                     id="standard-uncontrolled"
                     label="할일 제목"
-                    onChange={e => this.setState({ title: e.target.value })}
+                    onChange={e => this.setState({ TITLE: e.target.value })}
                     className={classes.titleAndDateField}
                     margin="normal"
                   />
@@ -130,7 +138,7 @@ class TodoForm extends Component {
                     id="date"
                     label="완료일"
                     type="date"
-                    onChange={e => this.setState({ deadline: e.target.value })}
+                    onChange={e => this.setState({ END_DT: e.target.value })}
                     className={classes.titleAndDateField}
                     InputLabelProps={{
                       shrink: true,
@@ -143,7 +151,7 @@ class TodoForm extends Component {
                     label="할일 내용"
                     multiline
                     rows="4"
-                    onChange={e => this.setState({ contents: e.target.value })}
+                    onChange={e => this.setState({ CONTENT: e.target.value })}
                     className={classes.textField}
                     fullWidth
                     margin="normal"
@@ -156,19 +164,19 @@ class TodoForm extends Component {
                       <FormGroup row>
                         <FormControlLabel
                           control={
-                            <Checkbox onChange={this.handleChange('한지민')} value="한지민" />
+                            <Checkbox onChange={this.handleChange} value="한지민" />
                           }
                           label="한지민"
                         />
                         <FormControlLabel
                           control={
-                            <Checkbox onChange={this.handleChange('전지현')} value="전지현" />
+                            <Checkbox onChange={this.handleChange}value="전지현" />
                           }
                           label="전지현"
                         />
                         <FormControlLabel
                           control={
-                            <Checkbox onChange={this.handleChange('이나영')} value="이나영" />
+                            <Checkbox onChange={this.handleChange} value="이나영" />
                           }
                           label="이나영"
                         />
@@ -185,7 +193,7 @@ class TodoForm extends Component {
                             value = "1"
                             />
                           }
-                          onChange={e => this.setState({ emergency: e.target.value })}
+                          onChange={e => this.setState({ EMERGENCY_FL: e.target.value })}
                           label="긴급"
                         />
                       </FormGroup>
