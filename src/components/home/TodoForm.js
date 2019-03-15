@@ -46,13 +46,13 @@ class TodoForm extends Component {
         TITLE: '',
         END_DT: '',
         CONTENT: '',
-        PARTICIPANT: new Map(),
+        PARTICIPANT: [],
         EMERGENCY_FL: 0,
 
       };
     
       handleClickOpen = () => {
-        this.setState({ open: true, EMERGENCY_FL: 0, PARTICIPANT: new Map()});
+        this.setState({ open: true, EMERGENCY_FL: 0, PARTICIPANT: []});
       };
     
       handleClose = () => {
@@ -62,11 +62,11 @@ class TodoForm extends Component {
       handleChange = event => {
         const name = event.target.value;
         const isChecked = event.target.checked; 
-        const ptcMap = this.state.PARTICIPANT;
+        const ptcArr = this.state.PARTICIPANT;
 
         if(event.target.checked == true){
           this.setState(
-            { [name]: event.target.checked, PARTICIPANT:ptcMap.set(name,isChecked)}
+            { [name]: event.target.checked, PARTICIPANT:ptcArr.concat(name)}
           );
         }
         
@@ -76,15 +76,6 @@ class TodoForm extends Component {
       handleSubmit = (e) => {
         e.preventDefault(); //페이지 리로딩 방지
         
-        var checkedName = [];
-        
-        function inputName(value, key, map) {
-          if(value == true) checkedName.push(key);
-          return checkedName.toString(); 
-        }
-
-        this.state.PARTICIPANT.forEach(inputName)
-
         const info = {
           method: 'post', 
           headers: {
@@ -94,7 +85,7 @@ class TodoForm extends Component {
             TITLE: this.state.TITLE,
             END_DT: this.state.END_DT,
             CONTENT: this.state.CONTENT,
-            PARTICIPANT: inputName(),
+            PARTICIPANT: this.state.PARTICIPANT.toString(),
             EMERGENCY_FL: parseInt(this.state.EMERGENCY_FL),
     
           })
