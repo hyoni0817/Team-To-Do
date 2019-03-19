@@ -28,7 +28,7 @@ Todo.saveTodo = function(title, deadline, contents, participant, emergency,  sav
         
 
         const sql = 'insert into todolist_tb set ?';
-        const values = {TITLE: title, SAVE_DT:saveDt, END_DT:deadline, CONTENT:contents, PARTICIPANT:'\''+participant+'\'', INCOMPLETE:participant, EMERGENCY_FL:emergency}
+        const values = {TITLE: title, SAVE_DT:saveDt, END_DT:deadline, CONTENT:contents, PARTICIPANT:participant, INCOMPLETE:participant, EMERGENCY_FL:emergency}
         conn.query(sql, values, (err, result) => {
             if(err) {
                 console.error('Error : ', err);
