@@ -46,13 +46,13 @@ class TodoForm extends Component {
         TITLE: '',
         END_DT: '',
         CONTENT: '',
-        PARTICIPANT: [],
+        PARTICIPANT: new Map(),
         EMERGENCY_FL: 0,
 
       };
     
       handleClickOpen = () => {
-        this.setState({ open: true, EMERGENCY_FL: 0, PARTICIPANT: []});
+        this.setState({ open: true, EMERGENCY_FL: 0, PARTICIPANT: new Map()});
       };
     
       handleClose = () => {
@@ -62,20 +62,36 @@ class TodoForm extends Component {
       handleChange = event => {
         const name = event.target.value;
         const isChecked = event.target.checked; 
-        const ptcArr = this.state.PARTICIPANT;
+        const ptcMap = this.state.PARTICIPANT;
 
-        if(event.target.checked == true){
-          this.setState(
-            { [name]: event.target.checked, PARTICIPANT:ptcArr.concat(name)}
-          );
-        }
+        //Map은 키 중복을 허용하지 않는다.
+        this.setState(
+          { [name]: event.target.checked, PARTICIPANT:ptcMap.set(name,isChecked)}
+        );
+        
         
       };
 
 
       handleSubmit = (e) => {
         e.preventDefault(); //페이지 리로딩 방지
+
+        var checkedName = [];
+        function inputName(value, key, map) {	
+          	
+          let nameFilter = checkedName.filter(name => name == key);
+          
+          if(value == true) {
+            checkedName.push(key);
+          }
+
+          return checkedName.toString(); 	
+
+        }	
+
+        this.state.PARTICIPANT.forEach(inputName)
         
+
         const info = {
           method: 'post', 
           headers: {
@@ -85,7 +101,7 @@ class TodoForm extends Component {
             TITLE: this.state.TITLE,
             END_DT: this.state.END_DT,
             CONTENT: this.state.CONTENT,
-            PARTICIPANT: this.state.PARTICIPANT.toString(),
+            PARTICIPANT: inputName(),
             EMERGENCY_FL: parseInt(this.state.EMERGENCY_FL),
     
           })
@@ -95,13 +111,12 @@ class TodoForm extends Component {
         .then(function(response) {
           return response.json();
         })
-
-        this.props.onCreate(this.state);
+        this.props.onReloading(true);
     }
 
       render() {
         const { classes } = this.props;
-       const { 한지민, 전지현, 이나영 } = this.state;
+        const { 한지민, 전지현, 이나영 } = this.state;
         return (
           <div>
             <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
